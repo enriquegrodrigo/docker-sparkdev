@@ -22,17 +22,39 @@ RUN cd /opt/ && \
 
 ENV PATH "$PATH:/opt/sbt/bin"
 
-#Initialize sbt (initial downloads)
+COPY sbtopts /opt/sbt/conf/sbtopts
 
 VOLUME /sbtlib
 
-RUN echo "-Dsbt.ivy.home=/sbtlib/"
+#Initialize sbt (initial downloads)
 
 RUN cd /tmp/ && \
 	mkdir /tmp/sbtinit && \
 	sbt	
 	
 
-#Installs sbt
+###################
+#Installs Spark 2.2 
+###################
 
 
+RUN cd /opt/ && \
+	wget  http://ftp.cixug.es/apache/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz -O spark-2.2.0-bin-hadoop2.7.tgz && \
+	tar -xvf spark-2.2.0-bin-hadoop2.7.tgz && \
+	rm spark-2.2.0-bin-hadoop2.7.tgz
+
+ENV PATH "$PATH:/opt/spark-2.2.0-bin-hadoop2.7/bin"
+
+
+###################
+#Installs Spark 2.2 
+###################
+
+VOLUME /home/work/project 
+
+WORKDIR /home/work/project
+
+EXPOSE 4040
+
+CMD ["spark-shell"]
+	

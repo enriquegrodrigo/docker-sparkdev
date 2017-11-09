@@ -17,7 +17,7 @@ For building the image:
 
 ```
 git clone https://github.com/enriquegrodrigo/docker-pydata.git
-docker build -t="Name of the image"
+docker build -t="Name of the image" .
 ```
 
 ## Usage

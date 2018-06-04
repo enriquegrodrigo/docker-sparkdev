@@ -1,53 +1,46 @@
 FROM openjdk:8u141-jdk
 
 ###################
-#Installs scala 2.11
+# Installs scala 2.11
 ###################
 
 RUN cd /opt/ && \
-	wget https://downloads.lightbend.com/scala/2.11.11/scala-2.11.11.tgz -O scala-2.11.11.tgz && \
-	tar -xvf scala-2.11.11.tgz && \
-	rm scala-2.11.11.tgz
+  wget https://downloads.lightbend.com/scala/2.11.11/scala-2.11.11.tgz -O scala-2.11.11.tgz && \
+  tar -xvf scala-2.11.11.tgz && \
+  rm scala-2.11.11.tgz
 
 ENV PATH "$PATH:/opt/scala-2.11.11/bin"
 
 ###################
-#Installs SBT 0.13
+# Installs SBT
 ###################
 
-RUN cd /opt/ && \
-	wget https://cocl.us/sbt01316tgz -O sbt.tar && \
-	tar -xvf sbt.tar && \
-	rm sbt.tar 
+ENV SBT_VERSION=1.1.1
 
-ENV PATH "$PATH:/opt/sbt/bin"
-
-COPY sbtopts /opt/sbt/conf/sbtopts
-
-VOLUME /sbtlib
-
-#Initialize sbt (initial downloads)
-
-RUN cd /tmp/ && \
-	mkdir /tmp/sbtinit && \
-	sbt	
+RUN \
+  curl -L -o sbt-$SBT_VERSION.deb http://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb && \
+  dpkg -i sbt-$SBT_VERSION.deb && \
+  rm sbt-$SBT_VERSION.deb && \
+  apt-get update && \
+  apt-get install sbt && \
+  sbt sbtVersion
 
 
 ###################
-#Installs Spark 2.3 
+# Installs Spark 2.3 
 ###################
 
 
 RUN cd /opt/ && \
-	wget  http://ftp.cixug.es/apache/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz -O spark-2.3.0-bin-hadoop2.7.tgz && \
-	tar -xvf spark-2.3.0-bin-hadoop2.7.tgz && \
-	rm spark-2.3.0-bin-hadoop2.7.tgz
+  wget  http://ftp.cixug.es/apache/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz -O spark-2.3.0-bin-hadoop2.7.tgz && \
+  tar -xvf spark-2.3.0-bin-hadoop2.7.tgz && \
+  rm spark-2.3.0-bin-hadoop2.7.tgz
 
 ENV PATH "$PATH:/opt/spark-2.3.0-bin-hadoop2.7/bin"
 
 
 ###################
-#Installs Spark 2.3 
+# Installs Spark 2.3 
 ###################
 
 VOLUME /home/work/project 
